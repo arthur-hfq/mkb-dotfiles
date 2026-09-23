@@ -1,0 +1,5 @@
+betterlockscreen
+i3lock-color
+i3lock-color-debug
+yay
+yay-debug

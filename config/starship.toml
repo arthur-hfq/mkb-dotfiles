@@ -1,0 +1,95 @@
+# ~/.config/starship.toml
+# [MARKAB] LIGHT BRUTALIST TELEMETRY
+
+add_newline = true
+
+# ==========================================
+# PROMPT FORMAT
+# ==========================================
+format = """
+[┌─ ](bold #222222)\
+$directory\
+$git_branch\
+$git_status\
+$git_metrics\
+$python$nodejs$rust$golang$docker_context\
+$memory_usage\
+$cmd_duration\
+$status\
+[─┐](bold #222222)
+[└─>](bold #222222) $character"""
+
+# ==========================================
+# MODULE CONFIGURATIONS
+# ==========================================
+
+[character]
+success_symbol = "[SYS_RDY](bold #222222)"
+error_symbol = "[SYS_ERR](bold #CC0000)"
+vimcmd_symbol = "[SYS_VIM](bold #0044CC)"
+
+[directory]
+style = "bold #111111"
+format = "[DIR:](bold #666666)[$path]($style) "
+truncation_length = 4
+truncation_symbol = "…/"
+read_only = "[RO]"
+read_only_style = "bold #CC0000"
+
+[git_branch]
+symbol = ""
+style = "bold #111111"
+format = "[GIT:](bold #666666)[$branch]($style) "
+
+[git_status]
+style = "bold #CC0000"
+format = '([$all_status$ahead_behind]($style) )'
+
+[git_metrics]
+disabled = false
+added_style = "bold #008800"
+deleted_style = "bold #CC0000"
+format = '[+$added]($added_style)[-$deleted]($deleted_style) '
+
+# -- LANGUAGES & TOOLS (Telemetry text instead of emojis) --
+
+[python]
+symbol = ""
+style = "bold #111111"
+format = "[PY:](bold #666666)[$version]($style) "
+
+[nodejs]
+symbol = ""
+style = "bold #111111"
+format = "[JS:](bold #666666)[$version]($style) "
+
+[rust]
+symbol = ""
+style = "bold #111111"
+format = "[RS:](bold #666666)[$version]($style) "
+
+[golang]
+symbol = ""
+style = "bold #111111"
+format = "[GO:](bold #666666)[$version]($style) "
+
+[docker_context]
+symbol = ""
+style = "bold #111111"
+format = "[DKR:](bold #666666)[$context]($style) "
+
+# -- SYSTEM METRICS --
+
+[memory_usage]
+disabled = false
+threshold = 70
+style = "bold #CC0000"
+format = "[MEM:](bold #666666)[$ram_pct]($style) "
+
+[cmd_duration]
+min_time = 500
+format = "[TIME:](bold #666666)[$duration](bold #0044CC) "
+
+[status]
+disabled = false
+format = "[ERR:](bold #666666)[$status](bold #CC0000) "

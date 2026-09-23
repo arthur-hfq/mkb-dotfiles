@@ -1,0 +1,100 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  [K-CORE] DUNST — SYSTEM ALERT DISPATCHER                     ║
+# ║  SQUARE NOTIFICATIONS / 1PX BORDER / URGENCY-CODED            ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+[global]
+    # ── GEOMETRY & POSITION ────────────────────────────────────────
+    monitor = 0
+    follow = mouse
+    width = 320
+    height = 120
+    origin = top-right
+    offset = 12x40
+    notification_limit = 5
+
+    # ── APPEARANCE: ABSOLUTE BRUTALISM ─────────────────────────────
+    # No rounded corners
+    corner_radius = 0
+
+    # Progress bar
+    progress_bar = true
+    progress_bar_height = 8
+    progress_bar_frame_width = 1
+    progress_bar_min_width = 280
+    progress_bar_max_width = 320
+    progress_bar_corner_radius = 0
+
+    # Borders — 1px solid dark
+    frame_width = 1
+    frame_color = "#111111"
+    separator_height = 1
+    separator_color = "#a0a0a0"
+
+    # Padding
+    padding = 10
+    horizontal_padding = 12
+    text_icon_padding = 12
+
+    # Gaps between notifications
+    gap_size = 4
+
+    # ── TYPOGRAPHY ─────────────────────────────────────────────────
+    font = JetBrains Mono 9
+    line_height = 2
+    markup = full
+    format = "<b>%s</b>\n%b"
+    alignment = left
+    vertical_alignment = center
+    word_wrap = yes
+    ellipsize = end
+
+    # ── BEHAVIOR ───────────────────────────────────────────────────
+    sort = yes
+    idle_threshold = 120
+    show_age_threshold = 30
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = yes
+    sticky_history = yes
+    history_length = 50
+
+    # ── ICONS ──────────────────────────────────────────────────────
+    enable_recursive_icon_lookup = true
+    icon_position = left
+    min_icon_size = 24
+    max_icon_size = 32
+
+    # ── MOUSE ACTIONS ──────────────────────────────────────────────
+    mouse_left_click = close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
+
+# ── URGENCY: LOW (SYSTEM INFO — GREY) ─────────────────────────────
+[urgency_low]
+    background = "#f4f4f4"
+    foreground = "#555555"
+    frame_color = "#a0a0a0"
+    highlight = "#a0a0a0"
+    timeout = 5
+    default_icon = dialog-information
+
+# ── URGENCY: NORMAL (ROUTING/ACTIVE — BLUE) ───────────────────────
+[urgency_normal]
+    background = "#f4f4f4"
+    foreground = "#111111"
+    frame_color = "#0055ff"
+    highlight = "#0055ff"
+    timeout = 10
+    default_icon = dialog-information
+    override_pause_level = 30
+
+# ── URGENCY: CRITICAL (ALERT/KILL — RED) ──────────────────────────
+[urgency_critical]
+    background = "#f4f4f4"
+    foreground = "#111111"
+    frame_color = "#ff3300"
+    highlight = "#ff3300"
+    timeout = 0
+    default_icon = dialog-warning
+    override_pause_level = 60

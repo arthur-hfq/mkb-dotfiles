@@ -1,0 +1,77 @@
+#!/bin/bash
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  set-vibrance — Convenience wrapper for digital vibrance       ║
+# ║  Detects available method and applies saturation boost          ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+# Usage:
+#   set-vibrance          # Apply max vibrance (factor 2.0)
+#   set-vibrance 1.5      # Moderate boost
+#   set-vibrance 1.0      # Reset to normal
+#   set-vibrance ctm      # Force CTM method
+#   set-vibrance shader   # Force picom shader method
+
+FACTOR="${1:-2.0}"
+METHOD="${2:-auto}"
+
+SHADER_PATH="$HOME/.config/picom/vibrance.glsl"
+CTM_BIN="$HOME/.local/bin/vibrance-ctm"
+
+# ── CTM METHOD (hardware-level, zero overhead) ────────────────────
+apply_ctm() {
+    if [ -x "$CTM_BIN" ]; then
+        echo "[vibrance] Applying CTM saturation factor: $FACTOR"
+        sudo "$CTM_BIN" "$FACTOR" 2>/dev/null || \
+            "$CTM_BIN" "$FACTOR"
+    else
+        echo "[vibrance] CTM binary not found at $CTM_BIN"
+        echo "  → Compile: cd ~/.local/src && gcc -O2 -o ~/.local/bin/vibrance-ctm vibrance-ctm.c \$(pkg-config --cflags --libs libdrm) -lm"
+        return 1
+    fi
+}
+
+# ── PICOM SHADER METHOD (compositor-level) ────────────────────────
+apply_shader() {
+    if [ ! -f "$SHADER_PATH" ]; then
+        echo "[vibrance] Shader not found at $SHADER_PATH"
+        return 1
+    fi
+
+    # Update the SATURATION constant in the shader
+    if command -v sed &>/dev/null; then
+        sed -i "s/const float SATURATION = .*/const float SATURATION = ${FACTOR};/" "$SHADER_PATH"
+        echo "[vibrance] Updated shader SATURATION = $FACTOR"
+    fi
+
+    # Reload picom (it will pick up the shader on restart)
+    if pgrep -x picom &>/dev/null; then
+        echo "[vibrance] Restarting picom to apply shader..."
+        pkill -x picom
+        sleep 0.3
+        picom --config "$HOME/.config/picom/picom.conf" &
+        disown
+        echo "[vibrance] picom restarted with vibrance shader"
+    else
+        echo "[vibrance] picom not running — shader will apply on next start"
+    fi
+}
+
+# ── AUTO-DETECT ───────────────────────────────────────────────────
+case "$METHOD" in
+    ctm)
+        apply_ctm
+        ;;
+    shader)
+        FACTOR="$1"
+        apply_shader
+        ;;
+    auto|*)
+        # Default: use picom shader (works without root)
+        # Override the first arg if it's a method keyword
+        case "$FACTOR" in
+            ctm)     FACTOR="2.0"; apply_ctm ;;
+            shader)  FACTOR="2.0"; apply_shader ;;
+            *)       apply_shader ;;
+        esac
+        ;;
+esac

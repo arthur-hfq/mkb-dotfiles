@@ -1,0 +1,233 @@
+
+# Monitor workspace assignments
+workspace "n1" output eDP-1
+workspace "n2" output eDP-1
+workspace "n3" output eDP-1
+workspace "n4" output eDP-1
+workspace "p1" output HDMI-1
+workspace "p2" output HDMI-1
+workspace "p3" output HDMI-1
+workspace "p4" output HDMI-1
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  [MARKAB] i3 WINDOW MANAGER — BRUTALIST TELEMETRY LAYOUT         ║
+# ║  GEOMETRY: ABSOLUTE RECTANGLES / NO DECORATION / 1PX BORDERS     ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+set $mod Mod4
+
+# ── TYPOGRAPHY ──────────────────────────────────────────────────────
+font pango:JetBrains Mono 9
+
+# Set workspaces to clean numbers
+set $ws1 "n1"
+set $ws2 "n2"
+set $ws3 "n3"
+set $ws4 "n4"
+set $ws5 "p1"
+set $ws6 "p2"
+set $ws7 "p3"
+set $ws8 "p4"
+set $ws9  "9"
+set $ws10 "10"
+
+# No titlebars. Every window is a perfect rectangle with 2px border.
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders none
+gaps inner 6
+gaps outer 6
+# class                 border  backgr  text    indicator child_border
+client.focused          #111111 #f4f4f4 #111111 #111111   #111111
+client.focused_inactive #a0a0a0 #f4f4f4 #555555 #a0a0a0   #a0a0a0
+client.unfocused        #a0a0a0 #f4f4f4 #888888 #a0a0a0   #a0a0a0
+client.urgent           #ff3300 #ff3300 #f4f4f4 #ff3300   #ff3300
+client.placeholder      #a0a0a0 #f4f4f4 #888888 #a0a0a0   #a0a0a0
+client.background       #f4f4f4
+
+# ── AUTOSTART ──────────────────────────────────────────────────────
+exec_always --no-startup-id setxkbmap -layout us -variant intl
+exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id dunst -config ~/.config/dunst/dunstrc
+# Set wallpaper to solid #f4f4f4 — ramdisk to avoid I/O latency
+# ── LAUNCH TELEMETRY HUD & GENERATORS ─────────────────────────────
+exec_always --no-startup-id ~/.config/i3/launch_telemetry.sh
+
+# ── KEYBINDINGS: CORE ─────────────────────────────────────────────
+# Terminal
+bindsym $mod+Return exec kitty
+
+# File Manager (Yazi)
+bindsym $mod+y exec kitty -e yazi
+
+# Launcher — rofi diagnostic prompt
+bindsym $mod+d exec rofi -show drun
+bindsym $mod+Shift+d exec rofi -show run
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Reload / Restart / Exit
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'TERMINATE SESSION?' -B 'CONFIRM EXIT' 'i3-msg exit'"
+
+# Power Menu (Polybar)
+bindsym $mod+p exec --no-startup-id "polybar-msg action '#powermenu.open.0'"
+
+# Bluetooth Menu
+bindsym $mod+Shift+b exec --no-startup-id ~/.config/i3/rofi_bluetooth.sh
+
+# ── NAVIGATION ─────────────────────────────────────────────────────
+# Focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Split orientation
+bindsym $mod+b split h
+bindsym $mod+v split v
+
+# Fullscreen
+bindsym $mod+f fullscreen toggle
+
+# Layout
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Floating
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+floating_modifier $mod
+
+# Parent / Child
+bindsym $mod+a focus parent
+
+# ── WORKSPACES ─────────────────────────────────────────────────────
+set $ws1 "n1"
+set $ws2 "n2"
+set $ws3 "n3"
+set $ws4 "n4"
+set $ws5 "p1"
+set $ws6 "p2"
+set $ws7 "p3"
+set $ws8 "p4"
+set $ws9  "9: LOG"
+set $ws10 "10: NULL"
+
+bindsym $mod+1 exec --no-startup-id ~/.config/i3/workspace_manager.py switch 1
+bindsym $mod+2 exec --no-startup-id ~/.config/i3/workspace_manager.py switch 2
+bindsym $mod+3 exec --no-startup-id ~/.config/i3/workspace_manager.py switch 3
+bindsym $mod+4 exec --no-startup-id ~/.config/i3/workspace_manager.py switch 4
+bindsym $mod+5 exec rofi -show window
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+bindsym $mod+Shift+1 exec --no-startup-id ~/.config/i3/workspace_manager.py move 1
+bindsym $mod+Shift+2 exec --no-startup-id ~/.config/i3/workspace_manager.py move 2
+bindsym $mod+Shift+3 exec --no-startup-id ~/.config/i3/workspace_manager.py move 3
+bindsym $mod+Shift+4 exec --no-startup-id ~/.config/i3/workspace_manager.py move 4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# ── RESIZE MODE ────────────────────────────────────────────────────
+mode "RESIZE" {
+    bindsym h resize shrink width 4 px or 4 ppt
+    bindsym j resize grow height 4 px or 4 ppt
+    bindsym k resize shrink height 4 px or 4 ppt
+    bindsym l resize grow width 4 px or 4 ppt
+
+    bindsym Left resize shrink width 4 px or 4 ppt
+    bindsym Down resize grow height 4 px or 4 ppt
+    bindsym Up resize shrink height 4 px or 4 ppt
+    bindsym Right resize grow width 4 px or 4 ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "RESIZE"
+
+# ── SCRATCHPAD ─────────────────────────────────────────────────────
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# ── SCREENLOCK ─────────────────────────────────────────────────────
+bindsym $mod+Escape exec --no-startup-id dm-tool lock
+
+# Lock screen on startup
+exec --no-startup-id dm-tool lock
+
+# ── SCREENSHOTS ────────────────────────────────────────────────────
+# Select area → clipboard
+bindsym Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
+# Select area → file with timestamp
+bindsym Shift+Print exec --no-startup-id mkdir -p ~/Pictures/Screenshots && maim -s ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png
+
+bindsym $mod+Shift+f exec kitty -e nvim ~/focus.txt
+
+# ── BRIGHTNESS CONTROLS ────────────────────────────────────────────
+# Requires 'brightnessctl' package installed
+
+
+
+# Switch focus between monitors
+bindsym $mod+m focus output next
+
+# Move to OTHER monitor's workspace
+bindsym $mod+Control+1 exec --no-startup-id ~/.config/i3/workspace_manager.py move_other 1
+bindsym $mod+Control+2 exec --no-startup-id ~/.config/i3/workspace_manager.py move_other 2
+bindsym $mod+Control+3 exec --no-startup-id ~/.config/i3/workspace_manager.py move_other 3
+bindsym $mod+Control+4 exec --no-startup-id ~/.config/i3/workspace_manager.py move_other 4
+exec_always --no-startup-id xrandr --output eDP-1 --gamma 0.8:0.85:1.25
+
+# Dynamic Brightness (Hardware for eDP-1, Software for HDMI-1)
+bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/brightness.py up
+bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/brightness.py down
+
+# ── AUDIO CONTROLS ─────────────────────────────────────────────────
+# Volume up (increases by 5%)
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+# Volume down (decreases by 5%)
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+# Mute/Unmute audio
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Mute/Unmute microphone
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# ── OCTO-ASSISTANT (DIGITAL AQUARIUM) ───────────────────────────────
+for_window [instance="octo-aquarium"] floating enable
+for_window [instance="octo-aquarium"] border none
+for_window [instance="octo-aquarium"] sticky enable
+for_window [instance="octo-aquarium"] resize set 480 360
+for_window [instance="octo-aquarium"] move position 1420 700
+
+# Press $mod+o (Super+o) to ask Octo questions or trigger commands
+bindsym $mod+o exec --no-startup-id ~/Projects/octo-assistant/scripts/octo_ask.sh
